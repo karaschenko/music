@@ -1,0 +1,36 @@
+<md-dialog>
+    <form data-ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Фильтр</h2>
+                <span data-flex></span>
+                <md-button class="md-icon-button" data-ng-click="cancel()">
+                    <md-icon data-md-font-set="material-icons">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-input-container>
+                    <md-select placeholder="Выберите жанр"
+                               data-ng-model="popularFilter.activeGenre">
+                        <md-option data-ng-repeat="genre in genreList"
+                                   data-ng-value="genre">{{genre.description}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-switch data-ng-model="popularFilter.eng_only"
+                           data-md-invert="isInverted">
+                    Только зарубежные
+                </md-switch>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions data-layout="row">
+            <span data-flex></span>
+            <md-button data-ng-click="cancel()">Отмена</md-button>
+            <md-button class="md-raised md-primary"
+                       data-ng-click="answer(popularFilter)">Применить</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

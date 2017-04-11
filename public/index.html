@@ -1,0 +1,258 @@
+<html lang="en" >
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="css/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/md-media-player.min.css">
+        <script src="https://vk.com/js/api/openapi.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+        <script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.3/angular-material.js"></script>
+        <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+        <script src="js/md-media-player.min.js"></script>
+        <script src="js/main.js"></script>
+    </head>
+    <body data-ng-app="AudioApp">
+
+        <div data-ng-controller="AppCtrl" data-layout="column" data-layout-fill>
+            <md-toolbar>
+
+                <div class="md-toolbar-tools">
+                    <md-button class="md-icon-button"
+                               data-ng-click="toggleLeft()">
+                        <md-icon md-font-set="material-icons"> menu </md-icon>
+                    </md-button>
+
+                    <md-tabs class="md-primary"
+                             data-md-swipe-content
+                             md-autoselect
+                             data-md-align-tabs="top"
+                             data-md-selected="selectedIndex"
+                             data-flex
+                             data-flex-md="80"
+                             data-flex-offset-md="10"
+                             data-flex-lg="60"
+                             data-flex-offset-lg="20">
+                        <md-tab label="мои аудиозаписи"
+                                data-md-on-select="changeTab(0)"></md-tab>
+                        <md-tab label="популярное"
+                                data-md-on-select="changeTab(1)"></md-tab>
+                    </md-tabs>
+                </div>
+
+            </md-toolbar>
+
+            <md-sidenav class="md-sidenav-left"
+                        data-md-component-id="left">
+                <md-toolbar>
+
+                    <div class="md-toolbar-tools">
+                        <span>Music player</span>
+                        <span data-flex></span>
+                    </div>
+
+                    <md-menu-content>
+
+                        <md-menu-item>
+                            <md-button data-ng-click="">
+                                <md-icon class="left_menu_icon"
+                                         md-menu-align-target
+                                         data-md-font-set="material-icons"> info </md-icon>
+                                О нас
+                            </md-button>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-button data-ng-click="logout()">
+                                <md-icon class="left_menu_icon"
+                                         md-menu-align-target
+                                         data-md-font-set="material-icons"> exit_to_app </md-icon>
+                                Выйти
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+
+                </md-toolbar>
+            </md-sidenav>
+
+            <div class="data_loading" data-ng-if="loading">
+                <md-progress-circular data-md-mode="indeterminate" class="data_loading-item"></md-progress-circular>
+            </div>
+            <md-content>
+                <section
+                     data-flex="100">
+                    <div class="no_auth-header"></div>
+                    <div data-layout="column"
+                         data-layout-align="center center">
+                        <md-button class="md-raised md-primary"
+                                   data-ng-click="go()">Войти</md-button>
+                    </div>
+                </section>
+
+                <section data-flex-sm="100"
+                         data-flex-offset-sm="0"
+                         data-flex-md="80"
+                         data-flex-offset-md="10"
+                         data-flex-lg="60"
+                         data-flex-offset-lg="20"
+                         data-layout="column"
+                         data-layout-fill
+                         >
+
+                    <div layout="column" ng-cloak>
+                        <md-content layout-padding layout="column">
+                            <form ng-submit="$event.preventDefault()">
+                                <md-autocomplete
+                                        ng-disabled="isDisabled"
+                                        md-no-cache="noCache"
+                                        md-selected-item="selectedItem"
+                                        md-search-text-change="searchTextChange(searchText)"
+                                        md-search-text="searchText"
+                                        md-selected-item-change="selectedItemChange(item)"
+                                        md-items="item in querySearch(searchText)"
+                                        md-item-text="item.name"
+                                        md-min-length="0"
+                                        placeholder="Pick an Angular repository"
+                                        md-menu-class="autocomplete-custom-template">
+                                        <md-item-template>
+                                              <span class="item-title">
+                                                <span> {{item.name}} </span>
+                                              </span>
+                                        </md-item-template>
+                                </md-autocomplete>
+                            </form>
+                        </md-content>
+                    </div>
+
+                    <md-list>
+                        <md-list-item class="md-2-line" data-ng-repeat="track in myAudios" data-ng-click="null">
+                            <img class="md-avatar" style="background-color: #727272" data-ng-src="{{cover.m[track.owner_id+'_'+track.id] || 'img/no-cover.png'}}">
+                            <div class="md-list-item-text" data-layout="column">
+                                <h3>{{ track.title }}</h3>
+                                <p>{{ track.artist }}</p>
+                            </div>
+                            <audio id="player" src="media/music.mp3"></audio>
+                            <div>
+                                <md-icon data-md-font-set="material-icons" class=onclick="document.getElementById('player').play()" style="position: relative; z-index: 20000;">play_arrow</md-icon>
+                                <md-icon data-md-font-set="material-icons"  onclick="document.getElementById('player').pause()" style="position: relative; z-index: 20000;">pause</md-icon>
+                             </div>
+                            <md-button  ng-click="go(track.url)" class="md-icon-button">
+                                <md-icon data-md-font-set="material-icons" > file_download </md-icon>
+                            </md-button>
+
+
+
+
+                        </md-list-item>
+                    </md-list>
+                </section>
+                <section flex-sm="100"
+                         flex-offset-sm="0"
+                         flex-md="80"
+                         flex-offset-md="10"
+                         flex-lg="60"
+                         flex-offset-lg="20"
+                         layout="column"
+                         layout-fill
+                         data-ng-if="AUTH_STATUS && selectedIndex == 1">
+                    <md-list>
+                        <md-list-item class="md-2-line" data-ng-repeat="track in recommendations" data-ng-click="null">
+                            <img class="md-avatar" style="background-color: #727272" data-ng-src="{{cover.m[track.owner_id+'_'+track.id] || 'img/no-cover.png'}}">
+                            <div class="md-list-item-text" data-layout="column">
+                                <h3>{{ track.title }}</h3>
+                                <p>{{ track.artist }}</p>
+                            </div>
+                            <md-menu>
+
+                                <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                                    <md-icon data-md-font-set="material-icons"> more_vert </md-icon>
+                                </md-button>
+
+                                <md-menu-content>
+
+                                    <md-menu-item>
+                                        <md-button>
+                                            <md-icon class="left_menu_icon"
+                                                     data-md-font-set="material-icons"
+                                                     md-menu-align-target> add </md-icon>
+                                            Добавить
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button>
+                                            <md-icon class="left_menu_icon"
+                                                     data-md-font-set="material-icons"
+                                                     md-menu-align-target> file_download </md-icon>
+                                            Скачать
+                                        </md-button>
+                                    </md-menu-item>
+
+                                </md-menu-content>
+
+                            </md-menu>
+                        </md-list-item>
+                    </md-list>
+                </section>
+                <section flex-sm="100"
+                         flex-offset-sm="0"
+                         flex-md="80"
+                         flex-offset-md="10"
+                         flex-lg="60"
+                         flex-offset-lg="20"
+                         layout="column"
+                         layout-fill
+                         data-ng-if="AUTH_STATUS && selectedIndex == 2">
+                    <md-list>
+                        <md-list-item class="md-2-line" data-ng-repeat="track in popular" data-ng-click="null">
+                            <img class="md-avatar" style="background-color: #727272" data-ng-src="{{cover.m[track.owner_id+'_'+track.id] || 'img/no-cover.png'}}">
+                            <div class="md-list-item-text" data-layout="column">
+                                <h3>{{ track.title }}</h3>
+                                <p>{{ track.artist }}</p>
+                            </div>
+
+                            <md-menu>
+
+                                <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                                    <md-icon data-md-font-set="material-icons"> more_vert </md-icon>
+                                </md-button>
+
+                                <md-menu-content>
+
+                                    <md-menu-item>
+                                        <md-button>
+                                            <md-icon class="left_menu_icon"
+                                                     data-md-font-set="material-icons"
+                                                     md-menu-align-target> add </md-icon>
+                                            Добавить
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button>
+                                            <md-icon class="left_menu_icon"
+                                                     data-md-font-set="material-icons"
+                                                     md-menu-align-target> file_download </md-icon>
+                                            Скачать
+                                        </md-button>
+                                    </md-menu-item>
+
+                                </md-menu-content>
+
+                            </md-menu>
+
+                        </md-list-item>
+                    </md-list>
+                </section>
+
+            </md-content>
+        </div>
+
+
+    </body>
+</html>

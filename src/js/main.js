@@ -1,0 +1,1 @@
+var audioApp = angular.module('AudioApp', ['ngMaterial']);
