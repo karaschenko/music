@@ -32,16 +32,11 @@
                              data-md-swipe-content
                              md-autoselect
                              data-md-align-tabs="top"
-                             data-md-selected="selectedIndex"
                              data-flex
-                             data-flex-md="80"
-                             data-flex-offset-md="10"
-                             data-flex-lg="60"
-                             data-flex-offset-lg="20">
-                        <md-tab label="мои аудиозаписи"
-                                data-md-on-select="changeTab(0)"></md-tab>
-                        <md-tab label="популярное"
-                                data-md-on-select="changeTab(1)"></md-tab>
+                             data-flex-md="100"
+                             data-flex-lg="100">
+                        <md-tab label="Audio"></md-tab>
+
                     </md-tabs>
                 </div>
 
@@ -136,115 +131,14 @@
                                 <h3>{{ track.title }}</h3>
                                 <p>{{ track.artist }}</p>
                             </div>
-                            <audio id="player" src="media/music.mp3"></audio>
+                            <audio id="{{ track.id}}" src="media/music.mp3"></audio>
                             <div>
-                                <md-icon data-md-font-set="material-icons" class=onclick="document.getElementById('player').play()" style="position: relative; z-index: 20000;">play_arrow</md-icon>
-                                <md-icon data-md-font-set="material-icons"  onclick="document.getElementById('player').pause()" style="position: relative; z-index: 20000;">pause</md-icon>
+                                <md-icon data-md-font-set="material-icons" id="play-{{ track.id}}" data-ng-click="play(track.id);" style="position: relative; z-index: 20000;">play_arrow</md-icon>
+                                <md-icon data-md-font-set="material-icons" id="pause-{{ track.id}}" data-ng-click="pause(track.id);" style="position: relative; z-index: 20000; display: none;">pause</md-icon>
                              </div>
                             <md-button  ng-click="go(track.url)" class="md-icon-button">
                                 <md-icon data-md-font-set="material-icons" > file_download </md-icon>
                             </md-button>
-
-
-
-
-                        </md-list-item>
-                    </md-list>
-                </section>
-                <section flex-sm="100"
-                         flex-offset-sm="0"
-                         flex-md="80"
-                         flex-offset-md="10"
-                         flex-lg="60"
-                         flex-offset-lg="20"
-                         layout="column"
-                         layout-fill
-                         data-ng-if="AUTH_STATUS && selectedIndex == 1">
-                    <md-list>
-                        <md-list-item class="md-2-line" data-ng-repeat="track in recommendations" data-ng-click="null">
-                            <img class="md-avatar" style="background-color: #727272" data-ng-src="{{cover.m[track.owner_id+'_'+track.id] || 'img/no-cover.png'}}">
-                            <div class="md-list-item-text" data-layout="column">
-                                <h3>{{ track.title }}</h3>
-                                <p>{{ track.artist }}</p>
-                            </div>
-                            <md-menu>
-
-                                <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
-                                    <md-icon data-md-font-set="material-icons"> more_vert </md-icon>
-                                </md-button>
-
-                                <md-menu-content>
-
-                                    <md-menu-item>
-                                        <md-button>
-                                            <md-icon class="left_menu_icon"
-                                                     data-md-font-set="material-icons"
-                                                     md-menu-align-target> add </md-icon>
-                                            Добавить
-                                        </md-button>
-                                    </md-menu-item>
-
-                                    <md-menu-item>
-                                        <md-button>
-                                            <md-icon class="left_menu_icon"
-                                                     data-md-font-set="material-icons"
-                                                     md-menu-align-target> file_download </md-icon>
-                                            Скачать
-                                        </md-button>
-                                    </md-menu-item>
-
-                                </md-menu-content>
-
-                            </md-menu>
-                        </md-list-item>
-                    </md-list>
-                </section>
-                <section flex-sm="100"
-                         flex-offset-sm="0"
-                         flex-md="80"
-                         flex-offset-md="10"
-                         flex-lg="60"
-                         flex-offset-lg="20"
-                         layout="column"
-                         layout-fill
-                         data-ng-if="AUTH_STATUS && selectedIndex == 2">
-                    <md-list>
-                        <md-list-item class="md-2-line" data-ng-repeat="track in popular" data-ng-click="null">
-                            <img class="md-avatar" style="background-color: #727272" data-ng-src="{{cover.m[track.owner_id+'_'+track.id] || 'img/no-cover.png'}}">
-                            <div class="md-list-item-text" data-layout="column">
-                                <h3>{{ track.title }}</h3>
-                                <p>{{ track.artist }}</p>
-                            </div>
-
-                            <md-menu>
-
-                                <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
-                                    <md-icon data-md-font-set="material-icons"> more_vert </md-icon>
-                                </md-button>
-
-                                <md-menu-content>
-
-                                    <md-menu-item>
-                                        <md-button>
-                                            <md-icon class="left_menu_icon"
-                                                     data-md-font-set="material-icons"
-                                                     md-menu-align-target> add </md-icon>
-                                            Добавить
-                                        </md-button>
-                                    </md-menu-item>
-
-                                    <md-menu-item>
-                                        <md-button>
-                                            <md-icon class="left_menu_icon"
-                                                     data-md-font-set="material-icons"
-                                                     md-menu-align-target> file_download </md-icon>
-                                            Скачать
-                                        </md-button>
-                                    </md-menu-item>
-
-                                </md-menu-content>
-
-                            </md-menu>
 
                         </md-list-item>
                     </md-list>

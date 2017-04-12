@@ -36,7 +36,24 @@ audioApp
 
         $scope.go = function (url) {
             window.location.href = url;
-        }
+        };
+        $scope.play = function (id) {
+            angular.forEach(
+           angular.element(document.getElementsByTagName('audio')), function (el, i) {
+               el.pause();
+               document.getElementById('pause-'+angular.element(el)[0].attributes['id'].value).style.display = 'none';
+
+           });
+            document.getElementById('pause-'+id).style.display = '';
+            document.getElementById('play-'+id).style.display = 'none';
+
+            document.getElementById(id).play();
+        };
+        $scope.pause = function (id) {
+            document.getElementById(id).pause();
+            document.getElementById('play-'+id).style.display = '';
+            document.getElementById('pause-'+id).style.display = 'none';
+        };
 
         // $scope.audioInspection = function(data){
         //     $http.post('/api/test/', { audio: data }).then(function(e){
@@ -47,12 +64,13 @@ audioApp
         // };
         $scope.myAudios =
             [
-                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa'},
-                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa' },
-                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa' },
-                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa' },
-                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa' }
+                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa', 'id':'audio1'},
+                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa', 'id':'audio2' },
+                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa', 'id':'audio3' },
+                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa', 'id':'audio4' },
+                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa', 'id':'audio5'}
             ];
+
         // $http.get('/api/?api_key=1').then(function(response) {
         //     $scope.API_KEY = response.data;
         //     authCheck(function(){
@@ -292,7 +310,6 @@ audioApp
             return deferred.promise;
         };
     }]);
-
 
 
 
