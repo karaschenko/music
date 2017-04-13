@@ -47,6 +47,7 @@ audioApp
            angular.element(document.getElementsByTagName('audio')), function (el, i) {
                el.pause();
                document.getElementById('pause-'+angular.element(el)[0].attributes['id'].value).style.display = 'none';
+               document.getElementById('play-'+angular.element(el)[0].attributes['id'].value).style.display = '';
 
            });
             document.getElementById('pause-'+id).style.display = '';
@@ -62,13 +63,7 @@ audioApp
             document.getElementById('pause-'+id).style.display = 'none';
         };
 
-        // $scope.audioInspection = function(data){
-        //     $http.post('/api/test/', { audio: data }).then(function(e){
-        //
-        //         $scope.audioInspection
-        //         console.log(e.data.response, data);
-        //     });
-        // };
+
 
         $http.post('http://nikita.adscab.eu/mp.php').then(function(data){
             $scope.myAudios = data.data;
@@ -76,20 +71,7 @@ audioApp
 
 
 
-        // $http.get('/api/?api_key=1').then(function(response) {
-        //     $scope.API_KEY = response.data;
-        //     authCheck(function(){
-        //         apiGetCall('/api/?api=audio.get', function(data){
-        //
-        //         });
-        //         apiGetCall('/api/?api=audio.getRecommendations', function(data){
-        //             $scope.recommendations = data.response.items;
-        //         });
-        //         apiGetCall('/api/?api=audio.getPopular', function(data){
-        //             $scope.popular = data.response;
-        //         });
-        //     }, false);
-        // });
+
 
         function buildToggler(componentId) {
             return function() {
@@ -118,7 +100,7 @@ audioApp
         // function authCheck(onSuccess, onError){
         //     var null_function = function(){};
         //     if (onSuccess == false) onSuccess = null_function;
-        //     if (onError == false) onError = null_function;
+        //     if (onError == sfalse) onError = null_function;
         //
         //     $http.get('/api/?auth_status=1').then(function(response) {
         //         if (!response.data) {
@@ -218,7 +200,7 @@ audioApp
              * remote dataservice call.
              */
             function querySearch (query) {
-                console.log('yes2');
+
                 var results = query ? $scope.repos.filter( createFilterFor(query) ) : $scope.repos,
                     deferred;
                 if ($scope.simulateQuery) {
@@ -231,12 +213,19 @@ audioApp
             }
 
             function searchTextChange(text) {
-                console.log('yes');
+                $http.jsonp('https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=' + text + '&callback=JSON_CALLBACK')
+                    .success(function (data) {
+                        $scope.repos = data[1];
+
+                    })
+
                 $log.info('Text changed to ' + text);
             }
 
             function selectedItemChange(item) {
-                $log.info('Item changed to ' + JSON.stringify(item));
+                $http.get('http://nikita.adscab.eu/mp.php?phrase='+item[0]).then(function(data){
+                    $scope.myAudios = data.data;
+                });
             }
 
             /**
@@ -245,36 +234,6 @@ audioApp
             function loadAll() {
 
                 var repos = [
-                    {
-                        'name'      : 'Angular 1',
-                        'url'       : 'https://github.com/angular/angular.js',
-                        'watchers'  : '3,623',
-                        'forks'     : '16,175'
-                    },
-                    {
-                        'name'      : 'Angular 2',
-                        'url'       : 'https://github.com/angular/angular',
-                        'watchers'  : '469',
-                        'forks'     : '760'
-                    },
-                    {
-                        'name'      : 'Angular Material',
-                        'url'       : 'https://github.com/angular/material',
-                        'watchers'  : '727',
-                        'forks'     : '1,241'
-                    },
-                    {
-                        'name'      : 'Bower Material',
-                        'url'       : 'https://github.com/angular/bower-material',
-                        'watchers'  : '42',
-                        'forks'     : '84'
-                    },
-                    {
-                        'name'      : 'Material Start',
-                        'url'       : 'https://github.com/angular/material-start',
-                        'watchers'  : '81',
-                        'forks'     : '303'
-                    }
                 ];
                 return repos.map( function (repo) {
                     repo.value = repo.name.toLowerCase();
@@ -289,7 +248,8 @@ audioApp
                 var lowercaseQuery = angular.lowercase(query);
 
                 return function filterFn(item) {
-                    return (item.value.indexOf(lowercaseQuery) === 0);
+                    console.log(item);
+                    return true;
                 };
 
             }
