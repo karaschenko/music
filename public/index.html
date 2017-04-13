@@ -131,10 +131,10 @@
                                 <h3>{{ track.title }}</h3>
                                 <p>{{ track.artist }}</p>
                             </div>
-                            <audio id="{{ track.id}}" src="media/music.mp3"></audio>
+                            <audio id="{{ track.id}}" ng-src="{{track.url | trustUrl}}"></audio>
                             <div>
-                                <md-icon data-md-font-set="material-icons" id="play-{{ track.id}}" data-ng-click="play(track.id);" style="position: relative; z-index: 20000;">play_arrow</md-icon>
-                                <md-icon data-md-font-set="material-icons" id="pause-{{ track.id}}" data-ng-click="pause(track.id);" style="position: relative; z-index: 20000; display: none;">pause</md-icon>
+                                <md-icon data-md-font-set="material-icons" id="play-{{track.id}}" data-ng-click="play(track.id);" style="position: relative; z-index: 20000;">play_arrow</md-icon>
+                                <md-icon data-md-font-set="material-icons" id="pause-{{track.id}}" data-ng-click="pause(track.id);" style="position: relative; z-index: 20000; display: none;">pause</md-icon>
                              </div>
                             <md-button  ng-click="go(track.url)" class="md-icon-button">
                                 <md-icon data-md-font-set="material-icons" > file_download </md-icon>

@@ -14,6 +14,11 @@ audioApp.config(function($mdThemingProvider) {
         .primaryPalette('blue')
         .accentPalette('red');
 });
+audioApp.filter("trustUrl", ['$sce', function ($sce) {
+    return function (recordingUrl) {
+        return $sce.trustAsResourceUrl(recordingUrl);
+    };
+}]);
 audioApp
     .controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $http, $mdDialog, $q, $log) {
         var self = this;
@@ -38,7 +43,7 @@ audioApp
             window.location.href = url;
         };
         $scope.play = function (id) {
-            angular.forEach(
+           angular.forEach(
            angular.element(document.getElementsByTagName('audio')), function (el, i) {
                el.pause();
                document.getElementById('pause-'+angular.element(el)[0].attributes['id'].value).style.display = 'none';
@@ -50,6 +55,8 @@ audioApp
             document.getElementById(id).play();
         };
         $scope.pause = function (id) {
+
+
             document.getElementById(id).pause();
             document.getElementById('play-'+id).style.display = '';
             document.getElementById('pause-'+id).style.display = 'none';
@@ -62,14 +69,12 @@ audioApp
         //         console.log(e.data.response, data);
         //     });
         // };
-        $scope.myAudios =
-            [
-                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa', 'id':'audio1'},
-                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa', 'id':'audio2' },
-                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa', 'id':'audio3' },
-                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa', 'id':'audio4' },
-                { 'title':'xyi', 'artist': 'pizda', 'url':'zhopa', 'id':'audio5'}
-            ];
+
+        $http.post('http://nikita.adscab.eu/mp.php').then(function(data){
+            $scope.myAudios = data.data;
+        });
+
+
 
         // $http.get('/api/?api_key=1').then(function(response) {
         //     $scope.API_KEY = response.data;
@@ -244,31 +249,31 @@ audioApp
                         'name'      : 'Angular 1',
                         'url'       : 'https://github.com/angular/angular.js',
                         'watchers'  : '3,623',
-                        'forks'     : '16,175',
+                        'forks'     : '16,175'
                     },
                     {
                         'name'      : 'Angular 2',
                         'url'       : 'https://github.com/angular/angular',
                         'watchers'  : '469',
-                        'forks'     : '760',
+                        'forks'     : '760'
                     },
                     {
                         'name'      : 'Angular Material',
                         'url'       : 'https://github.com/angular/material',
                         'watchers'  : '727',
-                        'forks'     : '1,241',
+                        'forks'     : '1,241'
                     },
                     {
                         'name'      : 'Bower Material',
                         'url'       : 'https://github.com/angular/bower-material',
                         'watchers'  : '42',
-                        'forks'     : '84',
+                        'forks'     : '84'
                     },
                     {
                         'name'      : 'Material Start',
                         'url'       : 'https://github.com/angular/material-start',
                         'watchers'  : '81',
-                        'forks'     : '303',
+                        'forks'     : '303'
                     }
                 ];
                 return repos.map( function (repo) {
